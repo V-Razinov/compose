@@ -15,22 +15,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.e.compose.ui.MainDrawer
+import com.e.compose.ui.toast
 import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen() {
-    val scaffoldState = rememberScaffoldState(
-        drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    )
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scaffoldState = rememberScaffoldState(drawerState = drawerState)
     val scope = rememberCoroutineScope()
     val ctx = LocalContext.current
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             TopBar(
                 onDrawerIconClick = { scope.launch { scaffoldState.drawerState.open() } },
-                onSearchClick = {
-                    Toast.makeText(ctx, "Search", Toast.LENGTH_SHORT).show()
-                }
+                onSearchClick = { ctx.toast(message = "Search") }
             )
         },
         drawerContent = {
@@ -39,9 +38,7 @@ fun MainScreen() {
                 drawerState = scaffoldState.drawerState
             )
         }
-    ) {
-
-    }
+    ) { }
 }
 
 @Preview(showBackground = true)

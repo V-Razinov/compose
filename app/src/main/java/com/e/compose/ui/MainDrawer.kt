@@ -1,14 +1,16 @@
 package com.e.compose.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,14 +37,23 @@ fun MainDrawer(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(5) { index ->
-                Text(
-                    text = " Item $index",
-                    modifier = Modifier
-                        .clickable { }
-                        .fillMaxWidth()
-                        .background(Color.LightGray, RoundedCornerShape(8.dp))
-                        .padding(16.dp)
-                )
+                Card(
+                    shape = RoundedCornerShape(8.dp),
+                    backgroundColor = Color.LightGray,
+                    elevation = 0.dp
+                ) {
+                    Text(
+                        text = " Item $index",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = rememberRipple(bounded = true),
+                                onClick = { },
+                            ),
+                    )
+                }
             }
         }
     }
@@ -52,22 +63,18 @@ fun MainDrawer(
 private fun Header(
     scope: CoroutineScope,
     drawerState: DrawerState
+) = TopAppBar(
+    backgroundColor = Color.Blue
 ) {
-    //replace with TopAppBar?
+    Text(
+        modifier = Modifier.padding(start = 16.dp),
+        text = "Связной",
+        color = Color.White,
+        fontSize = 24.sp
+    )
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(52.dp)
-            .background(Color.Blue)
-            .padding(start = 16.dp)
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterStart),
-            text = "Связной",
-            color = Color.White,
-            fontSize = 24.sp
-        )
         IconButton(
             modifier = Modifier.align(Alignment.CenterEnd),
             onClick = { scope.launch { drawerState.close() } }
